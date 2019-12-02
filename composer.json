@@ -1,0 +1,29 @@
+{
+    "name": "dkemens/yii2-aws-s3-manager",
+    "type": "yii2-extension",
+    "description": "A yii2 extension for managing files in AWS S3 buckets",
+    "keywords": ["yii2", "aws", "s3", "image manager", "file manager", "widget"],
+    "license": "GPL-3.0",
+    "support": {
+        "issues": "https://github.com/dkemens/yii2-aws-s3-manager/issues",
+        "source": "https://github.com/dkemens/yii2-aws-s3-manager"
+    },
+    "authors": [
+        {
+            "name": "Damien Kemens",
+            "email": "damien.kemens@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0",
+        "yiisoft/yii2-imagine": "*",
+        "aws/aws-sdk-php": "^3.64",
+        "pendalf89/yii2-tinymce": "*",
+        "thiagotalma/yii2-jstree": "~1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "dkemens\\s3mediamanager\\": ""
+        }
+    }    
+}

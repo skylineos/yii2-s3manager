@@ -3,9 +3,11 @@
 namespace dkemens\s3mediamanager\controllers;
 
 use yii\web\Controller;
-use yii\filters\{VerbFilter, AccessControl};
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use dkemens\s3mediamanager\Module as dks3module;
-use dkemens\s3mediamanager\components\{S3Constructor, S3Manager};
+use dkemens\s3mediamanager\components\S3Constructor;
+use dkemens\s3mediamanager\components\S3Manager;
 
 /**
  * Default controller for the `myjsiCommon` module
@@ -49,29 +51,31 @@ class DefaultController extends Controller
         return $this->render('index', []);
     }
 
-    public function actionGetBucketObject( $justFolders = false )
+    public function actionGetBucketObject($justFolders = false)
     {
         $s3 = $this->instantiateS3Constructor();
         $s3->buildBucket();
 
-        if ( $justFolders === true )
-            return ( json_encode($s3->folderObject) );
+        if ($justFolders === true) {
+            return (json_encode($s3->folderObject));
+        }
         
         return (json_encode(['bucketObject' => $s3->bucketObject, 'folderObject' => $s3->folderObject]));
     }
 
-    public function actionGetObject ( $key = null, $justPath = true ) : string 
+    public function actionGetObject($key = null, $justPath = true) : string
     {
-        if ( $key !== null )
-
-            if ( $justPath === true )
+        if ($key !== null) {
+            if ($justPath === true) {
                 return json_encode(['effectiveUrl' => 'https://s3.amazonaws.com/'.$this->getBucketName().'/'.$key]);
+            }
+        }
 
         $s3 = $this->instantiateS3Constructor();
         $objectHead = $s3->getObjectHead($this->getBucketName(), $key);
         $parts = explode("/", $key);
         $fileType = $s3->getType(end($parts));
-        $objectRow = [ 
+        $objectRow = [
             'text' => end($parts),
             'id' => $key,
             'modified' => $s3->getModifiedDate($objectHead['LastModified']),
@@ -80,7 +84,7 @@ class DefaultController extends Controller
             'size' => \Yii::$app->formatter->asSize($objectHead['@metadata']['headers']['content-length']),
             'effectiveUrl' => 'https://s3.amazonaws.com/'.$this->getBucketName().'/'.$key,
         ];
-        return json_encode($objectRow);            
+        return json_encode($objectRow);
 
         return json_encode(['error' => 'Could not load object head; no key provided.']);
     }
@@ -109,17 +113,15 @@ class DefaultController extends Controller
     public function actionUpload()
     {
         set_time_limit(0);
-        if (isset($_FILES['file']))
-        {
+        if (isset($_FILES['file'])) {
             $uploaded = \yii\web\UploadedFile::getInstanceByName('file');
             $fileContents = file_get_contents($uploaded->tempName);
 
-            $s3 = $this->uploadPkgFile (
+            $s3 = $this->uploadPkgFile(
                 strlen(\Yii::$app->request->post('s3mm-upload-path')) >= 2 ? ltrim(\Yii::$app->request->post('s3mm-upload-path'), '/') : '/',
                 $fileContents,
                 $uploaded->name
             );
-
         }
 
         return json_encode($s3);
@@ -133,8 +135,7 @@ class DefaultController extends Controller
      */
     public function actionCreateFolder()
     {
-        if  ( \Yii::$app->request->post('name') && \Yii::$app->request->post('parent') )
-        {
+        if (\Yii::$app->request->post('name') && \Yii::$app->request->post('parent')) {
             $s3 = new S3Manager([
                 'bucket' => $this->getBucketName(),
             ]);
@@ -154,8 +155,7 @@ class DefaultController extends Controller
      */
     public function actionDeleteFolder()
     {
-        if  ( \Yii::$app->request->post('key') )
-        {
+        if (\Yii::$app->request->post('key')) {
             $s3 = $this->instantiateS3Constructor();
 
             $folderObjects = $s3->listObjects(ltrim(\Yii::$app->request->post('key'), '/'));
@@ -163,27 +163,25 @@ class DefaultController extends Controller
             /** We can't delete a folder if it's not empty,  */
             $objectsInFolder = 0;
 
-            if ( is_object($folderObjects) && is_array($folderObjects['Contents']) )
-            {
-                foreach ( $folderObjects['Contents'] as $object )
-                {
-                    if ( !preg_match('/.folder/', $object['Key']) )
-                    {
+            if (is_object($folderObjects) && is_array($folderObjects['Contents'])) {
+                foreach ($folderObjects['Contents'] as $object) {
+                    if (!preg_match('/.folder/', $object['Key'])) {
                         $objectsInFolder++;
                     }
                 }
             }
 
             /** If it's not empty, return an error */
-            if ( $objectsInFolder > 0 )
+            if ($objectsInFolder > 0) {
                 return json_encode(['error' => 'folder not empty']);
+            }
             
             $manager = new S3Manager([
                 'bucket' => $this->getBucketName(),
             ]);
 
-            $manager->delete( trim(\Yii::$app->request->post('key'), '/').'/.folder');
-            $manager->delete( ltrim(\Yii::$app->request->post('key'), '/') );
+            $manager->delete(trim(\Yii::$app->request->post('key'), '/').'/.folder');
+            $manager->delete(ltrim(\Yii::$app->request->post('key'), '/'));
 
             return true;
         }
@@ -202,7 +200,7 @@ class DefaultController extends Controller
             'bucket' => $this->getBucketName(),
         ]);
 
-        return json_encode($s3->delete($key)); // false or the url        
+        return json_encode($s3->delete($key)); // false or the url
     }
 
     /**
@@ -210,7 +208,7 @@ class DefaultController extends Controller
      * @param      string $delimiter the delimiter parameter (used for listObjects etc)
      * @return the s3Constructor object
      */
-    private function instantiateS3Constructor( $delimiter = null )
+    private function instantiateS3Constructor($delimiter = null)
     {
         $parameters = [
             's3bucket' => $this->getBucketName(),
@@ -218,13 +216,14 @@ class DefaultController extends Controller
             's3prefix' => $this->getPrefix(),
             ];
             
-        if ( $delimiter !== null )
+        if ($delimiter !== null) {
             $parameters['delimiter'] = $delimiter;
+        }
 
         return new S3Constructor($parameters);
     }
 
-    private function uploadPkgFile ( string $path, string $body, string $filename )
+    private function uploadPkgFile(string $path, string $body, string $filename)
     {
         // If there's a / in the name, s3 will treat it as a folder. Nix that.
         $filename = str_replace('/', '', $filename);
@@ -243,7 +242,7 @@ class DefaultController extends Controller
     /**
      * Gets the bucket name from session, params, or module configuration
      *
-     * @throws     \yii\web\BadRequestHttpException  if there is no bucket configured, 
+     * @throws     \yii\web\BadRequestHttpException  if there is no bucket configured,
      *
      * @return     string                            The bucket name
      */
@@ -254,20 +253,23 @@ class DefaultController extends Controller
         /**
          * Check on the fly configuration first
          */
-        if ( $session->has(dks3module::SESSION_BUCKET_KEY) && null !== $session->get(dks3module::SESSION_BUCKET_KEY) )
+        if ($session->has(dks3module::SESSION_BUCKET_KEY) && null !== $session->get(dks3module::SESSION_BUCKET_KEY)) {
             return $session->get(dks3module::SESSION_BUCKET_KEY);
+        }
 
         /**
          * Next check parameters
          */
-        if ( isset(\Yii::$app->params['s3bucket']) )
+        if (isset(\Yii::$app->params['s3bucket'])) {
             return \Yii::$app->params['s3bucket'];
+        }
 
         /**
          * Finally, check module configuration
          */
-        if ( array_key_exists('bucket', \Yii::$app->modules['s3mediamanager']['configuration']) )
+        if (array_key_exists('bucket', \Yii::$app->modules['s3mediamanager']['configuration'])) {
             return \Yii::$app->modules['s3mediamanager']['configuration']['bucket'];
+        }
 
         throw new \yii\web\BadRequestHttpException('There is no bucket configuration. Please refer to the Readme');
     }
@@ -276,7 +278,7 @@ class DefaultController extends Controller
     /**
      * Gets the region name from session, params, or module configuration
      *
-     * @throws     \yii\web\BadRequestHttpException  if there is no region configured, 
+     * @throws     \yii\web\BadRequestHttpException  if there is no region configured,
      *
      * @return     string                            The region name
      */
@@ -287,20 +289,23 @@ class DefaultController extends Controller
         /**
          * Check on the fly configuration first
          */
-        if ( $session->has(dks3module::SESSION_REGION_KEY) && null !== $session->get(dks3module::SESSION_REGION_KEY) )
+        if ($session->has(dks3module::SESSION_REGION_KEY) && null !== $session->get(dks3module::SESSION_REGION_KEY)) {
             return $session->get(dks3module::SESSION_REGION_KEY);
+        }
 
         /**
          * Next check parameters
          */
-        if ( isset(\Yii::$app->params['s3region']) )
+        if (isset(\Yii::$app->params['s3region'])) {
             return \Yii::$app->params['s3region'];
+        }
 
         /**
          * Finally, check module configuration
          */
-        if ( array_key_exists('region', \Yii::$app->modules['s3mediamanager']['configuration']) )
+        if (array_key_exists('region', \Yii::$app->modules['s3mediamanager']['configuration'])) {
             return \Yii::$app->modules['s3mediamanager']['configuration']['region'];
+        }
 
         throw new \yii\web\BadRequestHttpException('There is no region configuration. Please refer to the Readme');
     }
@@ -308,7 +313,7 @@ class DefaultController extends Controller
     /**
      * Gets the s3 prefix from session, params, or module configuration
      *
-     * @throws     \yii\web\BadRequestHttpException  if there is no prefix configured, 
+     * @throws     \yii\web\BadRequestHttpException  if there is no prefix configured,
      *
      * @return     string                            The prefix name
      */
@@ -319,23 +324,25 @@ class DefaultController extends Controller
         /**
          * Check on the fly configuration first
          */
-        if ( $session->has(dks3module::SESSION_PREFIX_KEY) && null !== $session->get(dks3module::SESSION_PREFIX_KEY) )
+        if ($session->has(dks3module::SESSION_PREFIX_KEY) && null !== $session->get(dks3module::SESSION_PREFIX_KEY)) {
             return $session->get(dks3module::SESSION_PREFIX_KEY);
+        }
 
         /**
          * Next check parameters
          */
-        if ( isset(\Yii::$app->params['s3prefix']) )
+        if (isset(\Yii::$app->params['s3prefix'])) {
             return \Yii::$app->params['s3prefix'];
+        }
 
         /**
          * Finally, check module configuration
          */
         $manager = \Yii::$app->getModule('s3mediamanager');
-        if ( array_key_exists('s3prefix', $manager->configuration) )
+        if (array_key_exists('s3prefix', $manager->configuration)) {
             return $manager->configuration['s3prefix'];
+        }
 
         return null;
     }
-
 }

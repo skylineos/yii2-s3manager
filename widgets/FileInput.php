@@ -3,12 +3,13 @@
 namespace dkemens\s3mediamanager\widgets;
 
 use Yii;
-use yii\helpers\{Url, Html};
+use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\widgets\InputWidget;
 
 class FileInput extends InputWidget
 {
-	
+    
     /**
      * @var string the label to be displayed
      */
@@ -62,7 +63,10 @@ class FileInput extends InputWidget
     /**
      * @var string widget template
      */
-    public $template = '<div class="input-group">{input}<span class="input-group-btn">{button}{reset-button}</span></div>';
+    public $template = '<div class="input-group">
+        {input}
+        <span class="input-group-btn">{button}{reset-button}</span>
+    </div>';
 
     /**
      * @var string button tag
@@ -117,9 +121,9 @@ class FileInput extends InputWidget
      */
     public function run()
     {
-    	$replace['{input}'] = $this->hasModel() 
-    		? Html::activeTextInput($this->model, $this->attribute, $this->options) 
-    		: Html::textInput($this->name, $this->value, $this->options);
+        $replace['{input}'] = $this->hasModel()
+            ? Html::activeTextInput($this->model, $this->attribute, $this->options)
+            : Html::textInput($this->name, $this->value, $this->options);
         $replace['{button}'] = Html::tag($this->buttonTag, $this->buttonName, $this->buttonOptions);
         $replace['{reset-button}'] = null;
 

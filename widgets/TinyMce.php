@@ -77,7 +77,8 @@ class TinyMce extends InputWidget
     public function run()
     {
         if (!empty($this->callbackBeforeInsert)) {
-            $this->view->registerJs('
+            $this->view->registerJs(
+                '
                 $("#' . $this->options['id'] . '").on("fileInsert", ' . $this->callbackBeforeInsert . ');'
             );
         }

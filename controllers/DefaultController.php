@@ -26,7 +26,16 @@ class DefaultController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'upload', 'download', 'delete', 'get-bucket-object', 'get-object', 'create-folder', 'delete-folder'],
+                        'actions' => [
+                            'index',
+                            'upload',
+                            'download',
+                            'delete',
+                            'get-bucket-object',
+                            'get-object',
+                            'create-folder',
+                            'delete-folder'
+                        ],
                         'roles' => ['@'],
                     ],
                 ],
@@ -118,7 +127,9 @@ class DefaultController extends Controller
             $fileContents = file_get_contents($uploaded->tempName);
 
             $s3 = $this->uploadPkgFile(
-                strlen(\Yii::$app->request->post('s3mm-upload-path')) >= 2 ? ltrim(\Yii::$app->request->post('s3mm-upload-path'), '/') : '/',
+                strlen(\Yii::$app->request->post('s3mm-upload-path')) >= 2
+                    ? ltrim(\Yii::$app->request->post('s3mm-upload-path'), '/')
+                    : '/',
                 $fileContents,
                 $uploaded->name
             );
@@ -186,7 +197,8 @@ class DefaultController extends Controller
             return true;
         }
 
-        throw new \yii\web\BadRequestHttpException('Unable to delete folder. Check parameters or aws configuration. Perhaps the folder is not empty?');
+        throw new \yii\web\BadRequestHttpException('Unable to delete folder. Check parameters or aws configuration. 
+            Perhaps the folder is not empty?');
     }
 
     /**

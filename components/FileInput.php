@@ -11,22 +11,27 @@ use dkemens\s3mediamanager\assets\MediaManagerAsset;
 
 class FileInput extends InputWidget
 {
-	
     const DATA_ID = 'id';
     const DATA_URL = 'url';
 
-	/**
-	 * @var array $s3 the s3constructor singleton
-	 * @var string $s3bucket The s3 bucket to use *** REQUIRED ***
-	 * @var string $s3region The region in which the $s3bucket exists, example 'us-east-1' *** REQUIRED ***
-	 * @var string $delimiter The s3 prefix to use. Can be any base folder
-	 */
-	public $s3, $s3bucket, $s3region, $delimiter = null;
+    /**
+     * @var array $s3 the s3constructor singleton
+     * @var string $s3bucket The s3 bucket to use *** REQUIRED ***
+     * @var string $s3region The region in which the $s3bucket exists, example 'us-east-1' *** REQUIRED ***
+     * @var string $delimiter The s3 prefix to use. Can be any base folder
+     */
+    public $s3;
+    public $s3bucket;
+    public $s3region;
+    public $delimiter = null;
 
     /**
      * @var string widget template
      */
-    public $template = '<div class="input-group">{input}<span class="input-group-btn">{button}{reset-button}</span></div>';
+    public $template = '<div class="input-group">
+        {input}
+        <span class="input-group-btn">{button}{reset-button}</span>
+    </div>';
 
     /**
      * @var string button tag
@@ -80,7 +85,11 @@ class FileInput extends InputWidget
             $this->buttonOptions['id'] = $this->options['id'] . '-btn';
         }
 
-        $this->s3 = new S3Constructor(['s3bucket' => $this->s3bucket, 's3region' => $this->s3region, 'delimiter' => $this->delimiter]);
+        $this->s3 = new S3Constructor([
+            's3bucket' => $this->s3bucket,
+            's3region' => $this->s3region,
+            'delimiter' => $this->delimiter
+            ]);
 
         $this->buttonOptions['data-toggle'] = 'modal';
         $this->buttonOptions['href'] = '#MediaManager';
@@ -92,11 +101,15 @@ class FileInput extends InputWidget
      */
     public function run()
     {
-    	$replace['{input}'] = $this->hasModel() 
-    		? Html::activeTextInput($this->model, $this->attribute, $this->options) 
-    		: Html::textInput($this->name, $this->value, $this->options);
+        $replace['{input}'] = $this->hasModel()
+            ? Html::activeTextInput($this->model, $this->attribute, $this->options)
+            : Html::textInput($this->name, $this->value, $this->options);
         $replace['{button}'] = Html::tag($this->buttonTag, $this->buttonName, $this->buttonOptions);
-        $replace['{reset-button}'] = Html::tag($this->resetButtonTag, $this->resetButtonName, $this->resetButtonOptions);
+        $replace['{reset-button}'] = Html::tag(
+            $this->resetButtonTag,
+            $this->resetButtonName,
+            $this->resetButtonOptions
+        );
 
         MediaManagerAsset::register($this->view);
         

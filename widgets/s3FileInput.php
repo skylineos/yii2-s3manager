@@ -81,37 +81,41 @@ class s3FileInput extends YiiInputWidget
      */
     protected function buildInput() : string
     {
-    	$input = '';
+        $input = '';
 
-    	if ( $this->wrapper === true )
-    		$input.= $this->startWrapper();
+        if ($this->wrapper === true) {
+            $input.= $this->startWrapper();
+        }
 
-    	if ( $this->label !== null )
-    		$input.= $this->getLabel();
+        if ($this->label !== null) {
+            $input.= $this->getLabel();
+        }
 
-    	// Start input group
-    	$input.= '<div class="input-group">';
+        // Start input group
+        $input.= '<div class="input-group">';
 
-    	if ( $this->inputGroup === 'prepend' )
-    		$input.= $this->buildInputGroup();
+        if ($this->inputGroup === 'prepend') {
+            $input.= $this->buildInputGroup();
+        }
 
 
-        if ( $this->hasModel() )
-        {
+        if ($this->hasModel()) {
             $input.= Html::activeTextInput($this->model, $this->attribute, $this->options);
         } else {
-        	$input.= Html::textInput($this->name, $this->value, $this->options);
+            $input.= Html::textInput($this->name, $this->value, $this->options);
         }
-       	
+           
 
-    	if ( $this->inputGroup === 'append' )
-    		$input.= $this->buildInputGroup();
+        if ($this->inputGroup === 'append') {
+            $input.= $this->buildInputGroup();
+        }
 
-    	// End input group
-       	$input.= '</div>';
-       	
-       	if ( $this->wrapper === true )
-       		$input.= $this->endWrapper();
+        // End input group
+        $input.= '</div>';
+           
+        if ($this->wrapper === true) {
+            $input.= $this->endWrapper();
+        }
 
         return $input;
     }
@@ -119,69 +123,71 @@ class s3FileInput extends YiiInputWidget
     /**
      * Generates the beginning of a wrapper (if $this->wrapper === true)
      * Ie <div class="form-control"> from bootstrap
-     * 
+     *
      * @return string the beginning of the wrapper tag
      */
     protected function startWrapper() : string
     {
-    	$startWrapper = '<'.$this->wrapperTag;
+        $startWrapper = '<'.$this->wrapperTag;
 
-    	foreach ( $this->wrapperOptions as $key => $value )
-    		$startWrapper.= ' '.$key.'="'.$value.'"';
+        foreach ($this->wrapperOptions as $key => $value) {
+            $startWrapper.= ' '.$key.'="'.$value.'"';
+        }
 
-    	$startWrapper.= ">\n";
+        $startWrapper.= ">\n";
 
-    	return $startWrapper;
+        return $startWrapper;
     }
 
     /**
      * Generates the end of a wrapper (if $this->wrapper === true)
      * Ie <div class="form-control"> </div> from bootstrap
-     * 
+     *
      * @return string the end of the wrapper tag
      */
     protected function endWrapper() : string
     {
-    	return '</'.$this->wrapperTag.'>';
+        return '</'.$this->wrapperTag.'>';
     }
 
     /**
      * Build the label (if $this->label === true )
-     * 
+     *
      * @return string the label
      */
     protected function getLabel() : string
     {
-    	$label = "\t<label";
+        $label = "\t<label";
 
-    	foreach ( $this->labelOptions as $key => $value )
-    		$label.= ' '.$key.'="'.$value.'"';
+        foreach ($this->labelOptions as $key => $value) {
+            $label.= ' '.$key.'="'.$value.'"';
+        }
 
-    	$label.= ">".$this->label."</label>\n";
+        $label.= ">".$this->label."</label>\n";
 
-    	return $label;    	
+        return $label;
     }
 
     /**
      * Build the input group prepend/append tags/data
-     * 
+     *
      * @return string the input-group
      */
     protected function buildInputGroup() : string
     {
-    	$group = '<div class="input-group-'.$this->inputGroup.'">';
-    	$group.= '<button href="#MediaManager" class="btn btn-secondary" type="button" data-toggle="modal">';
-    	$group.= $this->inputGroupContent;
-    	$group.= '</button>';
-    	$group.= '</div>';
+        $group = '<div class="input-group-'.$this->inputGroup.'">';
+        $group.= '<button href="#MediaManager" class="btn btn-secondary" type="button" data-toggle="modal">';
+        $group.= $this->inputGroupContent;
+        $group.= '</button>';
+        $group.= '</div>';
 
-    	return $group;
+        return $group;
     }
 
     protected function buildModal() : string
     {
         MediaManagerAsset::register($this->view);
         
-        $modal = $this->renderFile('@vendor/dkemens/yii2-aws-s3-manager/views/default/index.php', []);    	
+        $modal = $this->renderFile('@vendor/dkemens/yii2-aws-s3-manager/views/default/index.php', []);
     }
 }

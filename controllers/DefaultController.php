@@ -329,7 +329,7 @@ class DefaultController extends Controller
      *
      * @return     string                            The prefix name
      */
-    private function getPrefix() : string
+    private function getPrefix() : ?string
     {
         $session = \Yii::$app->session;
 

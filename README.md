@@ -39,7 +39,7 @@ return [
     //....
     'modules' => [
         's3mediamanager' => [
-            'class' => 'dkemens\yii2-aws-s3-manager\Module',
+            'class' => 'dkemens\s3mediamanager\Module',
             // All settings can be configured on the fly regardless of usage type (fileinput, standalone manager, tinymce plugin)
             'configuration' => [ 
                 'bucket' => 'your-bucket-name', // can be overriden with \Yii::$app->params['s3bucket']

@@ -14,6 +14,7 @@ use dkemens\s3mediamanager\components\S3Manager;
  */
 class DefaultController extends Controller
 {
+    public bool $enableCsrfValidation  = false;
 
     /**
      * @inheritdoc

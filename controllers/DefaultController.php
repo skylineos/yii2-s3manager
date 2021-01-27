@@ -280,8 +280,8 @@ class DefaultController extends Controller
         /**
          * Finally, check module configuration
          */
-        if (array_key_exists('bucket', \Yii::$app->modules['s3mediamanager']['configuration'])) {
-            return \Yii::$app->modules['s3mediamanager']['configuration']['bucket'];
+        if (array_key_exists('bucket', \Yii::$app->modules['s3mediamanager']->configuration)) {
+            return \Yii::$app->modules['s3mediamanager']->configuration['bucket'];
         }
 
         throw new \yii\web\BadRequestHttpException('There is no bucket configuration. Please refer to the Readme');

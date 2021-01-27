@@ -33,9 +33,17 @@ MediaManagerAsset::register($this);
                 <div class="clearfix"></div>
                 <hr>
 
-                <?= Html::beginForm(['/s3mediamanager/default/upload'], 'post', ['enctype' => 'multipart/form-data', 'id' => 's3mm-file-upload-form']) ?>
+                <?= Html::beginForm(['/s3mediamanager/default/upload'], 'post', [
+                    'enctype' => 'multipart/form-data',
+                    'id' => 's3mm-file-upload-form'
+                    ]) ?>
                 
-                <div class="dz-message btn btn-info" data-dz-message><span><i class="fas fa-cloud-upload-alt"></i> Click or drag files here to upload (Max Filesize: <?= ini_get('upload_max_filesize') ?>)</span></div>
+                <div class="dz-message btn btn-info" data-dz-message>
+                    <span>
+                        <i class="fas fa-cloud-upload-alt"></i> 
+                        Click or drag files here to upload (Max Filesize: <?= ini_get('upload_max_filesize') ?>)
+                    </span>
+                </div>
                 <?= html::hiddenInput('s3mm-upload-path', '/', ['id' => 's3mm-upload-path']) ?>
 
                 <?= Html::endForm() ?>

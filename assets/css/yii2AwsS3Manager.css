@@ -42,6 +42,10 @@
   white-space: normal !important;
 }
 
+.vakata-context {
+  z-index: 999999 !important;
+}
+
 .loader {
   left: 50%;
   overflow: hidden;

@@ -18,9 +18,10 @@ class MediaManagerAsset extends AssetBundle
 
     public $js = [
         'js/dropzone.js',
-        'js/yii2AwsS3Manager.js',
+        'js/main.js',
         '//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js',
         'js/jquery.blockui.js',
+        '//cdn.jsdelivr.net/npm/sweetalert2@10',
     ];
 
     public $depends = [

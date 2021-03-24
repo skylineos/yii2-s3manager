@@ -50,7 +50,7 @@ class Module extends \yii\base\Module
         if ($this->configuration === null) {
             \Yii::error('s3mediamanager configuation must be defined in web/config. Refer to README.');
         }
-        
+
         // custom initialization code goes here
         $this->modules = [];
     }

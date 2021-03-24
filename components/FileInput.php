@@ -6,7 +6,7 @@ use Yii;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
-use dkemens\s3mediamanager\components\S3Constructor;
+use dkemens\s3mediamanager\components\S3Adapter;
 use dkemens\s3mediamanager\assets\MediaManagerAsset;
 
 class FileInput extends InputWidget
@@ -15,7 +15,7 @@ class FileInput extends InputWidget
     const DATA_URL = 'url';
 
     /**
-     * @var array $s3 the s3constructor singleton
+     * @var array $s3 the S3Adapter singleton
      * @var string $s3bucket The s3 bucket to use *** REQUIRED ***
      * @var string $s3region The region in which the $s3bucket exists, example 'us-east-1' *** REQUIRED ***
      * @var string $delimiter The s3 prefix to use. Can be any base folder
@@ -85,7 +85,7 @@ class FileInput extends InputWidget
             $this->buttonOptions['id'] = $this->options['id'] . '-btn';
         }
 
-        $this->s3 = new S3Constructor([
+        $this->s3 = new S3Adapter([
             's3bucket' => $this->s3bucket,
             's3region' => $this->s3region,
             'delimiter' => $this->delimiter

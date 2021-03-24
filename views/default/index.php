@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use dkemens\s3mediamanager\assets\MediaManagerAsset;
 
 MediaManagerAsset::register($this);
-
 ?>
 <div class="m-portlet m-portlet--bordered m-portlet--unair" id="mm__wrapper">
     <div class="m-portlet__head">

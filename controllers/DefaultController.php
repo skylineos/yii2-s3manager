@@ -6,7 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use dkemens\s3mediamanager\Module as dks3module;
-use dkemens\s3mediamanager\components\S3Constructor;
+use dkemens\s3mediamanager\components\S3Adapter;
 use dkemens\s3mediamanager\components\S3Manager;
 
 /**
@@ -14,8 +14,6 @@ use dkemens\s3mediamanager\components\S3Manager;
  */
 class DefaultController extends Controller
 {
-    public $enableCsrfValidation  = false;
-
     /**
      * @inheritdoc
      */
@@ -63,40 +61,26 @@ class DefaultController extends Controller
 
     public function actionGetBucketObject($justFolders = false)
     {
-        $s3 = $this->instantiateS3Constructor();
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $s3 = $this->instantiateS3Adapter();
         $s3->buildBucket();
 
         if ($justFolders === true) {
-            return (json_encode($s3->folderObject));
+            return json_encode($s3->folderObject);
         }
         
-        return (json_encode(['bucketObject' => $s3->bucketObject, 'folderObject' => $s3->folderObject]));
+        return json_encode(['bucketObject' => $s3->bucketObject, 'folderObject' => $s3->folderObject]);
     }
 
-    public function actionGetObject($key = null, $justPath = true) : string
+    public function actionGetObject(string $key, bool $justPath = true) : string
     {
-        if ($key !== null) {
-            if ($justPath === true) {
-                return json_encode(['effectiveUrl' => 'https://s3.amazonaws.com/'.$this->getBucketName().'/'.$key]);
-            }
+        $s3 = $this->instantiateS3Adapter();
+
+        if ($justPath === true) {
+            return json_encode(['effectiveUrl' => $s3->getEffectiveUrl($key)]);
         }
 
-        $s3 = $this->instantiateS3Constructor();
-        $objectHead = $s3->getObjectHead($this->getBucketName(), $key);
-        $parts = explode("/", $key);
-        $fileType = $s3->getType(end($parts));
-        $objectRow = [
-            'text' => end($parts),
-            'id' => $key,
-            'modified' => $s3->getModifiedDate($objectHead['LastModified']),
-            'icon' => $fileType['icon'],
-            'filetype' => $fileType['type'],
-            'size' => \Yii::$app->formatter->asSize($objectHead['@metadata']['headers']['content-length']),
-            'effectiveUrl' => 'https://s3.amazonaws.com/'.$this->getBucketName().'/'.$key,
-        ];
-        return json_encode($objectRow);
-
-        return json_encode(['error' => 'Could not load object head; no key provided.']);
+        return json_encode($s3->getObjectRow($key));
     }
 
     /**
@@ -105,9 +89,7 @@ class DefaultController extends Controller
      */
     public function actionDownload($key)
     {
-        $s3 = new S3Manager([
-            'bucket' => $this->getBucketName(),
-        ]);
+        $s3 = $this->instantiateS3Adapter();
 
         $file = $s3->download($key);
         $filename = explode("/", $key);
@@ -122,21 +104,20 @@ class DefaultController extends Controller
      */
     public function actionUpload()
     {
-        set_time_limit(0);
-        if (isset($_FILES['file'])) {
-            $uploaded = \yii\web\UploadedFile::getInstanceByName('file');
-            $fileContents = file_get_contents($uploaded->tempName);
-
-            $s3 = $this->uploadPkgFile(
-                strlen(\Yii::$app->request->post('s3mm-upload-path')) >= 2
-                    ? ltrim(\Yii::$app->request->post('s3mm-upload-path'), '/')
-                    : '/',
-                $fileContents,
-                $uploaded->name
-            );
+        if (!isset($_FILES['file'])) {
+            return false;
         }
 
-        return json_encode($s3);
+        set_time_limit(0);
+        $uploaded = \yii\web\UploadedFile::getInstanceByName('file');
+        $path = strlen(\Yii::$app->request->post('s3mm-upload-path')) >= 2
+            ? ltrim(\Yii::$app->request->post('s3mm-upload-path'), '/')
+            : '/';
+
+        $s3 = $this->instantiateS3Adapter();
+        $upload = $s3->upload($path, file_get_contents($uploaded->tempName), $uploaded->name);
+        
+        return json_encode($upload);
     }
 
     /**
@@ -148,12 +129,8 @@ class DefaultController extends Controller
     public function actionCreateFolder()
     {
         if (\Yii::$app->request->post('name') && \Yii::$app->request->post('parent')) {
-            $s3 = new S3Manager([
-                'bucket' => $this->getBucketName(),
-            ]);
-
+            $s3 = $this->instantiateS3Adapter();
             $path = \Yii::$app->request->post('parent').'/'.\Yii::$app->request->post('name');
-
             return $s3->createFolder($path);
         }
 
@@ -168,38 +145,15 @@ class DefaultController extends Controller
     public function actionDeleteFolder()
     {
         if (\Yii::$app->request->post('key')) {
-            $s3 = $this->instantiateS3Constructor();
-
-            $folderObjects = $s3->listObjects(ltrim(\Yii::$app->request->post('key'), '/'));
-
-            /** We can't delete a folder if it's not empty,  */
-            $objectsInFolder = 0;
-
-            if (is_object($folderObjects) && is_array($folderObjects['Contents'])) {
-                foreach ($folderObjects['Contents'] as $object) {
-                    if (!preg_match('/.folder/', $object['Key'])) {
-                        $objectsInFolder++;
-                    }
-                }
+            $s3 = $this->instantiateS3Adapter();
+            if ($s3->deleteFolder(\Yii::$app->request->post('key')) === true) {
+                return true;
             }
 
-            /** If it's not empty, return an error */
-            if ($objectsInFolder > 0) {
-                return json_encode(['error' => 'folder not empty']);
-            }
-            
-            $manager = new S3Manager([
-                'bucket' => $this->getBucketName(),
-            ]);
-
-            $manager->delete(trim(\Yii::$app->request->post('key'), '/').'/.folder');
-            $manager->delete(ltrim(\Yii::$app->request->post('key'), '/'));
-
-            return true;
+            return json_encode(['error' => 'folder not empty']);
         }
 
-        throw new \yii\web\BadRequestHttpException('Unable to delete folder. Check parameters or aws configuration. 
-            Perhaps the folder is not empty?');
+        throw new \yii\web\BadRequestHttpException('A key is required');
     }
 
     /**
@@ -209,47 +163,28 @@ class DefaultController extends Controller
      */
     public function actionDelete($key)
     {
-        $s3 = new S3Manager([
-            'bucket' => $this->getBucketName(),
-        ]);
-
+        $s3 = $this->instantiateS3Adapter();
         return json_encode($s3->delete($key)); // false or the url
     }
 
     /**
-     * Instantiates the s3 constructor object
+     * Instantiates the s3 adapter object
      * @param      string $delimiter the delimiter parameter (used for listObjects etc)
-     * @return the s3Constructor object
+     * @return the S3Adapter object
      */
-    private function instantiateS3Constructor($delimiter = null)
+    private function instantiateS3Adapter($delimiter = null)
     {
         $parameters = [
-            's3bucket' => $this->getBucketName(),
-            's3region' => $this->getRegionName(),
-            's3prefix' => $this->getPrefix(),
+            's3Bucket' => $this->getBucketName(),
+            's3Region' => $this->getRegionName(),
+            's3Prefix' => $this->getPrefix(),
             ];
             
         if ($delimiter !== null) {
             $parameters['delimiter'] = $delimiter;
         }
 
-        return new S3Constructor($parameters);
-    }
-
-    private function uploadPkgFile(string $path, string $body, string $filename)
-    {
-        // If there's a / in the name, s3 will treat it as a folder. Nix that.
-        $filename = str_replace('/', '', $filename);
-
-        $path = $path === '/' ? $filename : $path.$filename;
-
-        $s3 = new S3Manager([
-            'bucket' => $this->getBucketName(),
-            'key' => $path,
-            'body' => $body,
-        ]);
-
-        return $s3->upload(); // false or the url
+        return new S3Adapter($parameters);
     }
 
     /**

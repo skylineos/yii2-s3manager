@@ -19,11 +19,15 @@
         "yiisoft/yii2-imagine": "*",
         "aws/aws-sdk-php": "^3.64",
         "pendalf89/yii2-tinymce": "*",
-        "thiagotalma/yii2-jstree": "~1.0.0"
+        "thiagotalma/yii2-jstree": "~1.0.0",
+        "league/flysystem": "^2.0",
+        "league/flysystem-aws-s3-v3": "^2.0"
     },
     "autoload": {
         "psr-4": {
             "dkemens\\s3mediamanager\\": ""
         }
-    }    
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true    
 }

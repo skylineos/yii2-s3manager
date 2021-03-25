@@ -15,6 +15,8 @@ class S3Adapter extends \yii\base\BaseObject
      */
     const ROOT_DELIMITER = '/';
 
+    const AWS_PUBLIC_ACL_GROUP = 'http://acs.amazonaws.com/groups/global/AllUsers';
+
     /**
      * @var string $s3Bucket The s3 bucket to use *** REQUIRED ***
      * @var string $s3Region The region in which the $s3Bucket exists, example 'us-east-1' *** REQUIRED ***
@@ -100,13 +102,26 @@ class S3Adapter extends \yii\base\BaseObject
 
         foreach ($rootObjects as $item) {
             if ($item instanceof \League\Flysystem\FileAttributes) {
-                $this->addFile($item->path(), $item->lastModified(), $item->fileSize());
+                $this->addFile(
+                    $item->path(),
+                    $item->lastModified(),
+                    $item->fileSize()
+                );
             } elseif ($item instanceof \League\Flysystem\DirectoryAttributes) {
                 $this->addFolder($item->path(), $item->path());
             }
         }
     }
 
+    private function getVisibility(string $path) : string
+    {
+        try {
+            return $this->filesystem->visibility($path);
+        } catch (FilesystemError | UnableToRetrieveMetadata $exception) {
+            \Yii::error($exception);
+            return 'Unknown';
+        }
+    }
     /**
      * Lists all items in a filesystem. Prefix and recusive options available. Default functionality is
      * recusive on a given prefix (default null) - build the entire filesystem
@@ -172,6 +187,7 @@ class S3Adapter extends \yii\base\BaseObject
                 'Bucket' => $this->s3Bucket,
                 'Key' => $this->s3Prefix.$path.'/'.$filename,
                 'Body' => $contents,
+                'ACL' => 'public-read',
             ]);
 
             return $this->s3->headObject([
@@ -193,7 +209,7 @@ class S3Adapter extends \yii\base\BaseObject
      */
     public function getEffectiveUrl(string $key) : string
     {
-        return "https://$this->s3Bucket.s3.amazonaws.com/$this->s3Prefix/$key";
+        return str_replace('//', '/', "https://$this->s3Bucket.s3.amazonaws.com/$this->s3Prefix/$key");
     }
 
     /**
@@ -205,12 +221,18 @@ class S3Adapter extends \yii\base\BaseObject
      */
     public function getObjectRow(string $key) : array
     {
+        $this->connectAdapter();
+
         $objectHead = $this->s3->headObject([
             'Bucket' => $this->s3Bucket,
             'Key' => $this->s3Prefix.$key
         ]);
 
-        return $this->addFile($key, strtotime($objectHead['LastModified']), $objectHead['ContentLength']);
+        return $this->addFile(
+            $key,
+            strtotime($objectHead['LastModified']),
+            $objectHead['ContentLength']
+        );
     }
 
     /**
@@ -338,7 +360,7 @@ class S3Adapter extends \yii\base\BaseObject
             'icon' => $fileType['icon'],
             'filetype' => $fileType['type'],
             'size' => \Yii::$app->formatter->asSize($size),
-            'effectiveUrl' => "https://$this->s3Bucket.s3.amazonaws.com/$this->s3Prefix/$path",
+            'effectiveUrl' => $this->getEffectiveUrl($path),
         ];
 
         array_push($this->bucketObject[$fileParts['parent']], $item);

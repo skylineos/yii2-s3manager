@@ -33,7 +33,7 @@ class DefaultController extends Controller
                             'get-bucket-object',
                             'get-object',
                             'create-folder',
-                            'delete-folder'
+                            'delete-folder',
                         ],
                         'roles' => ['@'],
                     ],
@@ -139,7 +139,7 @@ class DefaultController extends Controller
 
     /**
      * Deletes a folder in s3
-     * @var  string post['key'] the name of the folder
+     * @var string post['key'] the name of the folder
      * @return boolean whether or not the folder was created
      */
     public function actionDeleteFolder()
@@ -161,7 +161,7 @@ class DefaultController extends Controller
      * @var  string $key the s3 object key
      * @return json_encoded s3 response
      */
-    public function actionDelete($key)
+    public function actionDelete(string $key)
     {
         $s3 = $this->instantiateS3Adapter();
         return json_encode($s3->delete($key)); // false or the url
@@ -169,10 +169,10 @@ class DefaultController extends Controller
 
     /**
      * Instantiates the s3 adapter object
-     * @param      string $delimiter the delimiter parameter (used for listObjects etc)
+     * @param string|null $delimiter the delimiter parameter (used for listObjects etc)
      * @return the S3Adapter object
      */
-    private function instantiateS3Adapter($delimiter = null)
+    private function instantiateS3Adapter(?string $delimiter = null)
     {
         $parameters = [
             's3Bucket' => $this->getBucketName(),

@@ -26,8 +26,15 @@ MediaManagerAsset::register($this);
                 
             </div>                    
             <div class="col">
-                <span class="pull-left"><i class="fas fa-folder-open"></i> <span id="s3mm-object-path-display" class="text-info">/</span></span>
-                <span class="text-info pull-right">&nbsp;&nbsp;<i class="fas fa-copy invisible" id="s3mm-copy-file-uri"></i></span>
+                <span class="pull-left">
+                    <i class="fas fa-folder-open"></i> 
+                    <span id="s3mm-object-path-display" class="text-info">/</span>
+                </span>
+
+                <span class="text-info pull-right">
+                    &nbsp;&nbsp;<i class="fas fa-copy invisible" id="s3mm-copy-file-uri"></i>
+                </span>
+                
                 <span id="s3mm-file-url-display" class="pull-right"></span> 
                 <div class="clearfix"></div>
                 <hr>
@@ -57,7 +64,7 @@ MediaManagerAsset::register($this);
                         <tr>
                             <th class="column_actions"></th>
                             <th class="column_fileName">File name</th>
-                            <th class="column_lastModified">Last modified</th>
+                            <th class="column_lastModified">Last modified</>
                             <th class="column_fileSize text-right">File size</th>
                         </tr>
                     </thead>

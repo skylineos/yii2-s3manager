@@ -26,7 +26,7 @@ $(document).ready( function() {
                 bucketObject['/'][file].text, 
                 bucketObject['/'][file].id, 
                 bucketObject['/'][file].modified, 
-                convertSize(bucketObject['/'][file].size)
+                convertSize(bucketObject['/'][file].size),
                 ));
         }
 
@@ -40,13 +40,16 @@ $(document).ready( function() {
         opener = document.activeElement;
     });
 
+    /**
+     * Populate the input field with the selected file's effective URL
+     */
     $('#insertFile').click(function(){
+        // @todo don't do this
         var target = $(opener).parent().parent().find('input').attr('id');
         $('#'+target).val($('#selectedFile').val());
         $('#MediaManager').modal('hide');
     });
 });
-
 
 function createJsTree(data)
 {
@@ -103,8 +106,8 @@ function createJsTree(data)
                     {
                         Swal.fire({
                             title: 'Error!',
-                            text: `This folder contains objects and therefore cannot be deleted. Please remove the objects 
-                                before deleting the folder.`,
+                            text: `This folder contains objects and therefore cannot be deleted. Please remove the 
+                                objects before deleting the folder.`,
                             icon: 'error',
                         });
         
@@ -138,7 +141,11 @@ function createJsTree(data)
 function blocker()
 {
     $('#mm__wrapper').block({ 
-        message : '<div class="loader"><span class="ball"></span><span class="ball2"></span><ul><li></li><li></li><li></li><li></li><li></li></ul></div>',
+        message : `<div class="loader">
+            <span class="ball"></span>
+            <span class="ball2"></span>
+            <ul><li></li><li></li><li></li><li></li><li></li></ul>
+        </div>`,
         css : { backgroundColor: 'none', border: 'none' }
     });    
 }
@@ -228,7 +235,13 @@ $('#folderTree').on("changed.jstree", function (e, data) {
     {
         var filename = bucketObject[data.selected][file].text;
         var object = bucketObject[data.selected][file];
-        var fileRow = buildFileRow(object.icon, filename, object.id, object.modified, convertSize(object.size));
+        var fileRow = buildFileRow(
+            object.icon, 
+            filename, 
+            object.id, 
+            object.modified, 
+            convertSize(object.size),
+        );
 
        $('#files').append(fileRow);
     }
@@ -297,15 +310,18 @@ function convertSize(filesize)
 
 function buildFileRow(icon, filename, id, modified, size)
 {
-    var filerow = '<tr class="fileRow">'+
-        '<td>'+
-            '<a href="#" id="'+id+'" class="s3mm-object" data-toggle="tooltip" data-placement="top" title="Download"><i class="far fa-arrow-alt-circle-down text-info"></i></a> '+
-            '<a href="#" id="'+id+'" class="s3mm-delete-object" data-toggle="tooltip" data-placement="top" title="Delete"><i class="far fa-times-circle text-danger"></i></a> '+
-        '</td>'+   
-        '<td><i class="'+icon+'"></i> '+filename+'</a></td>'+
-        '<td>'+modified+'</td>'+
-        '<td class="text-right text-muted">'+size+'</td>'+
-    '</tr>';
+    var filerow = `<tr class="fileRow">
+        <td>
+            <a href="#" id="${id}" class="s3mm-object" data-toggle="tooltip" data-placement="top" title="Download">
+                <i class="far fa-arrow-alt-circle-down text-info"></i></a>
+            <a href="#" id="${id}" class="s3mm-delete-object" data-toggle="tooltip" data-placement="top" title="Delete">
+                <i class="far fa-times-circle text-danger"></i>
+            </a>
+        </td> 
+        <td><i class="${icon}"></i> ${filename}</a></td>
+        <td>${modified}</td>
+        <td class="text-right text-muted">${size}</td>
+    </tr>`;
 
     return filerow;
 }

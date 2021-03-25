@@ -42,6 +42,10 @@
   white-space: normal !important;
 }
 
+.swal2-container {
+  z-index: 99999;
+}
+
 .loader {
   left: 50%;
   overflow: hidden;

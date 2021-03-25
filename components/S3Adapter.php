@@ -209,7 +209,8 @@ class S3Adapter extends \yii\base\BaseObject
      */
     public function getEffectiveUrl(string $key) : string
     {
-        return str_replace('//', '/', "https://$this->s3Bucket.s3.amazonaws.com/$this->s3Prefix/$key");
+        $key = str_replace('//', '/', "$this->s3Prefix/$key");
+        return "https://$this->s3Bucket.s3.amazonaws.com/$key";
     }
 
     /**

@@ -183,12 +183,19 @@ class S3Adapter extends \yii\base\BaseObject
         $this->connectAdapter();
 
         try {
-            $this->s3->putObject([
+            $options = [
                 'Bucket' => $this->s3Bucket,
                 'Key' => $this->s3Prefix.$path.'/'.$filename,
                 'Body' => $contents,
                 'ACL' => 'public-read',
-            ]);
+            ];
+
+            // Special ContentType handler svgs (otherwise they're octetstreams that don't render)
+            if (\substr(\strtolower($filename), -3, 3) === 'svg') {
+                $options['ContentType'] = 'image/svg+xml';
+            }
+
+            $this->s3->putObject($options);
 
             return $this->s3->headObject([
                 'Bucket' => $this->s3Bucket,

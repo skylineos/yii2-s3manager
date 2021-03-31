@@ -183,9 +183,11 @@ class S3Adapter extends \yii\base\BaseObject
         $this->connectAdapter();
 
         try {
+            $key = \preg_replace('/(\/+)/', '/', $this->s3Prefix.$path.'/'.$filename);
+
             $options = [
                 'Bucket' => $this->s3Bucket,
-                'Key' => $this->s3Prefix.$path.'/'.$filename,
+                'Key' => $key,
                 'Body' => $contents,
                 'ACL' => 'public-read',
             ];
@@ -199,7 +201,7 @@ class S3Adapter extends \yii\base\BaseObject
 
             return $this->s3->headObject([
                 'Bucket' => $this->s3Bucket,
-                'Key' => $this->s3Prefix.$path."/$filename",
+                'Key' => $key
             ]);
         } catch (FilesystemError | UnableToWriteFile $exception) {
             \Yii::error($exception);
@@ -216,7 +218,7 @@ class S3Adapter extends \yii\base\BaseObject
      */
     public function getEffectiveUrl(string $key) : string
     {
-        $key = str_replace('//', '/', "$this->s3Prefix/$key");
+        $key = preg_replace('/(\/+)/', '/', "$this->s3Prefix/$key");
         return "https://$this->s3Bucket.s3.amazonaws.com/$key";
     }
 
@@ -233,7 +235,7 @@ class S3Adapter extends \yii\base\BaseObject
 
         $objectHead = $this->s3->headObject([
             'Bucket' => $this->s3Bucket,
-            'Key' => $this->s3Prefix.$key
+            'Key' => preg_replace('/(\/+)/', '/', $this->s3Prefix.$key)
         ]);
 
         return $this->addFile(

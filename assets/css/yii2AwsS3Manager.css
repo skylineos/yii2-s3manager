@@ -18,6 +18,11 @@
   cursor: pointer;
 }
 
+.dz-preview .dz-file-preview .dz-processing
+{
+  width: 400px !important;
+}
+
 .column_actions {
 	width: 55px;
 }

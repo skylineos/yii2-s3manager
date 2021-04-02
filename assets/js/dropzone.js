@@ -168,7 +168,7 @@ var Dropzone = function (_Emitter) {
         /**
          * The timeout for the XHR requests in milliseconds (since `v4.4.0`).
          */
-        timeout: 30000,
+        timeout: 300000000,
 
         /**
          * How many file uploads to process in parallel (See the

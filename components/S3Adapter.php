@@ -6,16 +6,16 @@ use yii\web\BadRequestHttpException;
 use yii\helpers\ArrayHelper;
 use Aws\S3\S3Client;
 
-use \League\Flysystem\StorageAttributes;
+use League\Flysystem\StorageAttributes;
 
 class S3Adapter extends \yii\base\BaseObject
 {
     /**
      * What we use as the root file node
      */
-    const ROOT_DELIMITER = '/';
+    public const ROOT_DELIMITER = '/';
 
-    const AWS_PUBLIC_ACL_GROUP = 'http://acs.amazonaws.com/groups/global/AllUsers';
+    public const AWS_PUBLIC_ACL_GROUP = 'http://acs.amazonaws.com/groups/global/AllUsers';
 
     /**
      * @var string $s3Bucket The s3 bucket to use *** REQUIRED ***
@@ -90,7 +90,7 @@ class S3Adapter extends \yii\base\BaseObject
      *
      * @return void
      */
-    public function buildBucket() : void
+    public function buildBucket(): void
     {
         $this->connectAdapter();
 
@@ -113,7 +113,7 @@ class S3Adapter extends \yii\base\BaseObject
         }
     }
 
-    private function getVisibility(string $path) : string
+    private function getVisibility(string $path): string
     {
         try {
             return $this->filesystem->visibility($path);
@@ -148,7 +148,7 @@ class S3Adapter extends \yii\base\BaseObject
      * @param string $key
      * @return array the object result
      */
-    public function download(string $key) : array
+    public function download(string $key): array
     {
         return $this->s3->getObject([
             'Bucket' => $this->s3Bucket,
@@ -162,7 +162,7 @@ class S3Adapter extends \yii\base\BaseObject
      * @param string $key
      * @return array the result of the request
      */
-    public function delete(string $key) : array
+    public function delete(string $key): array
     {
         return $this->s3->deleteObject([
             'Bucket' => $this->s3Bucket,
@@ -209,14 +209,14 @@ class S3Adapter extends \yii\base\BaseObject
 
         return false;
     }
-    
+
     /**
      * Returns a properly built s3 effective url
      *
      * @param string $key
      * @return string
      */
-    public function getEffectiveUrl(string $key) : string
+    public function getEffectiveUrl(string $key): string
     {
         $key = preg_replace('/(\/+)/', '/', "$this->s3Prefix/$key");
         return "https://$this->s3Bucket.s3.amazonaws.com/$key";
@@ -229,7 +229,7 @@ class S3Adapter extends \yii\base\BaseObject
      * @param string $key
      * @return array the frontend formatted object
      */
-    public function getObjectRow(string $key) : array
+    public function getObjectRow(string $key): array
     {
         $this->connectAdapter();
 
@@ -251,7 +251,7 @@ class S3Adapter extends \yii\base\BaseObject
      * @param string $path
      * @return boolean
      */
-    public function createFolder(string $path) : bool
+    public function createFolder(string $path): bool
     {
         $this->connectAdapter();
 
@@ -271,7 +271,7 @@ class S3Adapter extends \yii\base\BaseObject
      * @param string $path
      * @return boolean
      */
-    public function deleteFolder(string $path) : bool
+    public function deleteFolder(string $path): bool
     {
         $this->connectAdapter();
 
@@ -308,7 +308,7 @@ class S3Adapter extends \yii\base\BaseObject
      *
      * @return void
      */
-    private function connectAdapter() : void
+    private function connectAdapter(): void
     {
         $this->filesystem = new \League\Flysystem\Filesystem(
             new \League\Flysystem\AwsS3V3\AwsS3V3Adapter(
@@ -325,9 +325,14 @@ class S3Adapter extends \yii\base\BaseObject
      * @param string $path the full path of the folder (eg folder1/folder2/folder3)
      * @return integer @see https://php.net/array_push
      */
-    private function addFolder(string $path) : int
+    private function addFolder(string $path): int
     {
         $folderParts = $this->getPathParts($path);
+
+        $existingFolders = ArrayHelper::getColumn($this->folderObject, 'id');
+        if (in_array($folderParts['id'], $existingFolders) || $folderParts['id'] === '') {
+            return -1;
+        }
 
         return array_push($this->folderObject, [
             'text' => $folderParts['name'],
@@ -349,14 +354,14 @@ class S3Adapter extends \yii\base\BaseObject
      * @param float $size filesize
      * @return array the bucket object friendly array
      */
-    private function addFile(string $path, string $modified, float $size) : array
+    private function addFile(string $path, string $modified, float $size): array
     {
         $fileParts = $this->getPathParts($path);
 
         if ($fileParts['name'] === '') {
             return [];
         }
-        
+
         $fileType = $this->getType($path);
 
         if (!isset($this->bucketObject[$fileParts['parent']])) {
@@ -374,6 +379,14 @@ class S3Adapter extends \yii\base\BaseObject
         ];
 
         array_push($this->bucketObject[$fileParts['parent']], $item);
+
+        /**
+         * 4/20/2021 - DK
+         * In odd cases, folders will not show up (though files will) - I have no idea why. To circumvent
+         * the issue, we must check each file's parent folder exists, and add it if false
+         */
+        $this->addFolder($fileParts['parent']);
+
         return $item;
     }
 
@@ -384,7 +397,7 @@ class S3Adapter extends \yii\base\BaseObject
      * @param string $path
      * @return array
      */
-    private function getPathParts(?string $path) : array
+    private function getPathParts(?string $path): array
     {
         $parts = explode('/', $path);
 
@@ -395,7 +408,7 @@ class S3Adapter extends \yii\base\BaseObject
                 'parent' => self::ROOT_DELIMITER
             ];
         }
-        
+
         $folderName = $parts[(\count($parts) -1)];
         unset($parts[(\count($parts) -1)]);
         $parent = \implode('/', $parts);
@@ -407,7 +420,7 @@ class S3Adapter extends \yii\base\BaseObject
         ];
     }
 
-    private function getModifiedDate(string $date) : ?string
+    private function getModifiedDate(string $date): ?string
     {
         return \DateTime::createFromFormat('U', $date)->format('m/d/Y H:i a');
     }

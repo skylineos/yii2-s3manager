@@ -152,7 +152,7 @@ class S3Adapter extends \yii\base\BaseObject
     {
         return $this->s3->getObject([
             'Bucket' => $this->s3Bucket,
-            'Key' => $this->s3Prefix.$key,
+            'Key' => $this->s3Prefix . $key,
         ]);
     }
 
@@ -166,7 +166,7 @@ class S3Adapter extends \yii\base\BaseObject
     {
         return $this->s3->deleteObject([
             'Bucket' => $this->s3Bucket,
-            'Key' => $this->s3Prefix.$key,
+            'Key' => $this->s3Prefix . $key,
         ]);
     }
 
@@ -183,7 +183,7 @@ class S3Adapter extends \yii\base\BaseObject
         $this->connectAdapter();
 
         try {
-            $key = \preg_replace('/(\/+)/', '/', $this->s3Prefix.$path.'/'.$filename);
+            $key = \preg_replace('/(\/+)/', '/', $this->s3Prefix . $path . '/' . $filename);
 
             $options = [
                 'Bucket' => $this->s3Bucket,
@@ -218,8 +218,8 @@ class S3Adapter extends \yii\base\BaseObject
      */
     public function getEffectiveUrl(string $key): string
     {
-        $key = preg_replace('/(\/+)/', '/', "$this->s3Prefix/$key");
-        return "https://$this->s3Bucket.s3.amazonaws.com/$key";
+        $key = preg_replace('/(\/+)/', '/', "$this->s3Bucket.s3.amazonaws.com/$this->s3Prefix/$key");
+        return "https://$key";
     }
 
     /**
@@ -235,7 +235,7 @@ class S3Adapter extends \yii\base\BaseObject
 
         $objectHead = $this->s3->headObject([
             'Bucket' => $this->s3Bucket,
-            'Key' => preg_replace('/(\/+)/', '/', $this->s3Prefix.$key)
+            'Key' => preg_replace('/(\/+)/', '/', $this->s3Prefix . $key)
         ]);
 
         return $this->addFile(
@@ -409,8 +409,8 @@ class S3Adapter extends \yii\base\BaseObject
             ];
         }
 
-        $folderName = $parts[(\count($parts) -1)];
-        unset($parts[(\count($parts) -1)]);
+        $folderName = $parts[(\count($parts) - 1)];
+        unset($parts[(\count($parts) - 1)]);
         $parent = \implode('/', $parts);
 
         return [

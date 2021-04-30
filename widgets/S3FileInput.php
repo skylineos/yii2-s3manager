@@ -10,7 +10,7 @@ use yii\widgets\InputWidget as YiiInputWidget;
  * TODO: document...
  */
 
-class s3FileInput extends YiiInputWidget
+class S3FileInput extends YiiInputWidget
 {
     /**
      * @var string whether input is to be disabled
@@ -79,42 +79,42 @@ class s3FileInput extends YiiInputWidget
      *
      * @return string the rendered input markup
      */
-    protected function buildInput() : string
+    protected function buildInput(): string
     {
         $input = '';
 
         if ($this->wrapper === true) {
-            $input.= $this->startWrapper();
+            $input .= $this->startWrapper();
         }
 
         if ($this->label !== null) {
-            $input.= $this->getLabel();
+            $input .= $this->getLabel();
         }
 
         // Start input group
-        $input.= '<div class="input-group">';
+        $input .= '<div class="input-group">';
 
         if ($this->inputGroup === 'prepend') {
-            $input.= $this->buildInputGroup();
+            $input .= $this->buildInputGroup();
         }
 
 
         if ($this->hasModel()) {
-            $input.= Html::activeTextInput($this->model, $this->attribute, $this->options);
+            $input .= Html::activeTextInput($this->model, $this->attribute, $this->options);
         } else {
-            $input.= Html::textInput($this->name, $this->value, $this->options);
+            $input .= Html::textInput($this->name, $this->value, $this->options);
         }
-           
+
 
         if ($this->inputGroup === 'append') {
-            $input.= $this->buildInputGroup();
+            $input .= $this->buildInputGroup();
         }
 
         // End input group
-        $input.= '</div>';
-           
+        $input .= '</div>';
+
         if ($this->wrapper === true) {
-            $input.= $this->endWrapper();
+            $input .= $this->endWrapper();
         }
 
         return $input;
@@ -126,15 +126,15 @@ class s3FileInput extends YiiInputWidget
      *
      * @return string the beginning of the wrapper tag
      */
-    protected function startWrapper() : string
+    protected function startWrapper(): string
     {
-        $startWrapper = '<'.$this->wrapperTag;
+        $startWrapper = '<' . $this->wrapperTag;
 
         foreach ($this->wrapperOptions as $key => $value) {
-            $startWrapper.= ' '.$key.'="'.$value.'"';
+            $startWrapper .= ' ' . $key . '="' . $value . '"';
         }
 
-        $startWrapper.= ">\n";
+        $startWrapper .= ">\n";
 
         return $startWrapper;
     }
@@ -145,9 +145,9 @@ class s3FileInput extends YiiInputWidget
      *
      * @return string the end of the wrapper tag
      */
-    protected function endWrapper() : string
+    protected function endWrapper(): string
     {
-        return '</'.$this->wrapperTag.'>';
+        return '</' . $this->wrapperTag . '>';
     }
 
     /**
@@ -155,15 +155,15 @@ class s3FileInput extends YiiInputWidget
      *
      * @return string the label
      */
-    protected function getLabel() : string
+    protected function getLabel(): string
     {
         $label = "\t<label";
 
         foreach ($this->labelOptions as $key => $value) {
-            $label.= ' '.$key.'="'.$value.'"';
+            $label .= ' ' . $key . '="' . $value . '"';
         }
 
-        $label.= ">".$this->label."</label>\n";
+        $label .= ">" . $this->label . "</label>\n";
 
         return $label;
     }
@@ -173,21 +173,21 @@ class s3FileInput extends YiiInputWidget
      *
      * @return string the input-group
      */
-    protected function buildInputGroup() : string
+    protected function buildInputGroup(): string
     {
-        $group = '<div class="input-group-'.$this->inputGroup.'">';
-        $group.= '<button href="#MediaManager" class="btn btn-secondary" type="button" data-toggle="modal">';
-        $group.= $this->inputGroupContent;
-        $group.= '</button>';
-        $group.= '</div>';
+        $group = '<div class="input-group-' . $this->inputGroup . '">';
+        $group .= '<button href="#MediaManager" class="btn btn-secondary" type="button" data-toggle="modal">';
+        $group .= $this->inputGroupContent;
+        $group .= '</button>';
+        $group .= '</div>';
 
         return $group;
     }
 
-    protected function buildModal() : string
+    protected function buildModal(): string
     {
         MediaManagerAsset::register($this->view);
-        
+
         $modal = $this->renderFile('@vendor/dkemens/yii2-aws-s3-manager/views/default/index.php', []);
     }
 }

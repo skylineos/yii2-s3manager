@@ -3,8 +3,6 @@
     <br>
 </p>
 
-This was heavily based on Pendalf89's implementation (https://github.com/PendalF89/yii2-filemanager). Thank you Pendalf! I just needed more flexibility in a few areas - but that package was the basis of most of this.
-
 This extension provides a very customizable method for managing files in [AWS S3 buckets](https://aws.amazon.com/s3/?nc2=h_m1) for the [Yii framework 2.0](http://www.yiiframework.com).
 It can function on it's own, as a callback for a form field, or integrated with TinyMCE.
 
@@ -24,7 +22,7 @@ php composer.phar require --prefer-dist dkemens/yii2-aws-s3-manager
 or add
 
 ```json
-"dkemens/yii2-aws-s3-manager": "*"
+"dkemens/yii2-aws-s3-manager": "~3.0.0"
 ```
 
 to the require section of your composer.json.

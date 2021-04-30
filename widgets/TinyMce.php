@@ -5,12 +5,8 @@ namespace dkemens\s3mediamanager\widgets;
 use Yii;
 use yii\widgets\InputWidget;
 use yii\web\JsExpression;
-use pendalf89\tinymce\TinyMce as TinyMceWidget;
+use dosamigos\tinymce\TinyMce as TinyMceWidget;
 use yii\helpers\Url;
-
-/**
- * Thank you @pendalf89
- */
 
 class TinyMce extends InputWidget
 {

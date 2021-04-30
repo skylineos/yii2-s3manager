@@ -5,7 +5,6 @@ namespace dkemens\s3mediamanager\components;
 use yii\web\BadRequestHttpException;
 use yii\helpers\ArrayHelper;
 use Aws\S3\S3Client;
-
 use League\Flysystem\StorageAttributes;
 
 class S3Adapter extends \yii\base\BaseObject

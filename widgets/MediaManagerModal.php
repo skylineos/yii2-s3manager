@@ -8,8 +8,6 @@ use dkemens\s3mediamanager\assets\MediaManagerAsset;
 
 class MediaManagerModal extends Widget
 {
-
-
     /**
      * This should be set here, in params, or in the module config
      *

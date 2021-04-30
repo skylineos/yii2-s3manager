@@ -68,11 +68,11 @@ class DefaultController extends Controller
         if ($justFolders === true) {
             return json_encode($s3->folderObject);
         }
-        
+
         return json_encode(['bucketObject' => $s3->bucketObject, 'folderObject' => $s3->folderObject]);
     }
 
-    public function actionGetObject(string $key, bool $justPath = true) : string
+    public function actionGetObject(string $key, bool $justPath = true): string
     {
         $s3 = $this->instantiateS3Adapter();
 
@@ -95,7 +95,7 @@ class DefaultController extends Controller
         $filename = explode("/", $key);
 
         header("Content-Type: {$file['ContentType']}");
-        header('Content-Disposition: attachment; filename='.end($filename));
+        header('Content-Disposition: attachment; filename=' . end($filename));
         echo $file['Body'];
     }
 
@@ -116,7 +116,7 @@ class DefaultController extends Controller
 
         $s3 = $this->instantiateS3Adapter();
         $upload = $s3->upload($path, file_get_contents($uploaded->tempName), $uploaded->name);
-        
+
         return json_encode($upload);
     }
 
@@ -130,7 +130,7 @@ class DefaultController extends Controller
     {
         if (\Yii::$app->request->post('name') && \Yii::$app->request->post('parent')) {
             $s3 = $this->instantiateS3Adapter();
-            $path = \Yii::$app->request->post('parent').'/'.\Yii::$app->request->post('name');
+            $path = \Yii::$app->request->post('parent') . '/' . \Yii::$app->request->post('name');
             return $s3->createFolder($path);
         }
 
@@ -179,7 +179,7 @@ class DefaultController extends Controller
             's3Region' => $this->getRegionName(),
             's3Prefix' => $this->getPrefix(),
             ];
-            
+
         if ($delimiter !== null) {
             $parameters['delimiter'] = $delimiter;
         }
@@ -194,7 +194,7 @@ class DefaultController extends Controller
      *
      * @return     string                            The bucket name
      */
-    private function getBucketName() : string
+    private function getBucketName(): string
     {
         $session = \Yii::$app->session;
 
@@ -230,7 +230,7 @@ class DefaultController extends Controller
      *
      * @return     string                            The region name
      */
-    private function getRegionName() : string
+    private function getRegionName(): string
     {
         $session = \Yii::$app->session;
 
@@ -265,7 +265,7 @@ class DefaultController extends Controller
      *
      * @return     string                            The prefix name
      */
-    private function getPrefix() : ?string
+    private function getPrefix(): ?string
     {
         $session = \Yii::$app->session;
 

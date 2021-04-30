@@ -11,8 +11,8 @@ use dkemens\s3mediamanager\assets\MediaManagerAsset;
 
 class FileInput extends InputWidget
 {
-    const DATA_ID = 'id';
-    const DATA_URL = 'url';
+    public const DATA_ID = 'id';
+    public const DATA_URL = 'url';
 
     /**
      * @var array $s3 the S3Adapter singleton
@@ -112,7 +112,7 @@ class FileInput extends InputWidget
         );
 
         MediaManagerAsset::register($this->view);
-        
+
         $modal = $this->renderFile('@vendor/dkemens/yii2-aws-s3-manager/views/default/index.php', [
             'inputId' => $this->options['id'],
             'btnId' => $this->buttonOptions['id'],

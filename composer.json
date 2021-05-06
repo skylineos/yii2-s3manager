@@ -1,12 +1,12 @@
 {
-    "name": "skylineosos/yii2-s3manager",
+    "name": "skylineos/yii2-s3manager",
     "type": "yii2-extension",
     "description": "A yii2 extension for managing files in AWS S3 buckets",
     "keywords": ["yii2", "aws", "s3", "image manager", "file manager", "widget"],
     "license": "GPL-3.0",
     "support": {
-        "issues": "https://github.com/skylineosos/yii2-s3manager/issues",
-        "source": "https://github.com/skylineosos/yii2-s3manager"
+        "issues": "https://github.com/skylineos/yii2-s3manager/issues",
+        "source": "https://github.com/skylineos/yii2-s3manager"
     },
     "authors": [
         {
@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-            "skylineosos\\yii\\s3manager\\": ""
+            "skylineos\\yii\\s3manager\\": ""
         }
     },
     "minimum-stability": "stable",

@@ -1,6 +1,6 @@
 <?php
 
-namespace skyline\yii\s3manager;
+namespace skylineosos\yii\s3manager;
 
 /**
  * portal module definition class
@@ -10,7 +10,7 @@ class Module extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'skyline\yii\s3manager\controllers';
+    public $controllerNamespace = 'skylineosos\yii\s3manager\controllers';
 
     /**
      * The module configuration

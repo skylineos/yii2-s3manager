@@ -1,13 +1,13 @@
 <?php
 
-namespace skyline\yii\s3manager\components;
+namespace skylineos\yii\s3manager\components;
 
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
-use skyline\yii\s3manager\components\S3Adapter;
-use skyline\yii\s3manager\assets\MediaManagerAsset;
+use skylineos\yii\s3manager\components\S3Adapter;
+use skylineos\yii\s3manager\assets\MediaManagerAsset;
 
 class FileInput extends InputWidget
 {
@@ -113,7 +113,7 @@ class FileInput extends InputWidget
 
         MediaManagerAsset::register($this->view);
 
-        $modal = $this->renderFile('@vendor/skyline/s3manager/views/default/index.php', [
+        $modal = $this->renderFile('@vendor/skylineos/s3manager/views/default/index.php', [
             'inputId' => $this->options['id'],
             'btnId' => $this->buttonOptions['id'],
             'frameId' => $this->options['id'] . '-frame',

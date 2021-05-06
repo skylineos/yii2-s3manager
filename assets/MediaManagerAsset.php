@@ -1,12 +1,12 @@
 <?php
 
-namespace skyline\yii\s3manager\assets;
+namespace skylineos\yii\s3manager\assets;
 
 use yii\web\AssetBundle;
 
 class MediaManagerAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/skyline/s3manager/assets';
+    public $sourcePath = '@vendor/skylineos/s3manager/assets';
 
     public $css = [
         'css/basic.css',

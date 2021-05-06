@@ -1,13 +1,13 @@
 <?php
 
-namespace skyline\yii\s3manager\controllers;
+namespace skylineos\yii\s3manager\controllers;
 
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use skyline\yii\s3manager\Module as skyS3Module;
-use skyline\yii\s3manager\components\S3Adapter;
-use skyline\yii\s3manager\components\S3Manager;
+use skylineos\yii\s3manager\Module as skyS3Module;
+use skylineos\yii\s3manager\components\S3Adapter;
+use skylineos\yii\s3manager\components\S3Manager;
 
 /**
  * Default controller for the `myjsiCommon` module

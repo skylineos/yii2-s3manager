@@ -1,13 +1,13 @@
 <?php
 
-namespace dkemens\s3mediamanager\controllers;
+namespace skyline\yii\s3mediamanager\controllers;
 
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use dkemens\s3mediamanager\Module as dks3module;
-use dkemens\s3mediamanager\components\S3Adapter;
-use dkemens\s3mediamanager\components\S3Manager;
+use skyline\yii\s3mediamanager\Module as skyS3Module;
+use skyline\yii\s3mediamanager\components\S3Adapter;
+use skyline\yii\s3mediamanager\components\S3Manager;
 
 /**
  * Default controller for the `myjsiCommon` module
@@ -201,8 +201,8 @@ class DefaultController extends Controller
         /**
          * Check on the fly configuration first
          */
-        if ($session->has(dks3module::SESSION_BUCKET_KEY) && null !== $session->get(dks3module::SESSION_BUCKET_KEY)) {
-            return $session->get(dks3module::SESSION_BUCKET_KEY);
+        if ($session->has(skyS3Module::SESSION_BUCKET_KEY) && null !== $session->get(skyS3Module::SESSION_BUCKET_KEY)) {
+            return $session->get(skyS3Module::SESSION_BUCKET_KEY);
         }
 
         /**
@@ -237,8 +237,8 @@ class DefaultController extends Controller
         /**
          * Check on the fly configuration first
          */
-        if ($session->has(dks3module::SESSION_REGION_KEY) && null !== $session->get(dks3module::SESSION_REGION_KEY)) {
-            return $session->get(dks3module::SESSION_REGION_KEY);
+        if ($session->has(skyS3Module::SESSION_REGION_KEY) && null !== $session->get(skyS3Module::SESSION_REGION_KEY)) {
+            return $session->get(skyS3Module::SESSION_REGION_KEY);
         }
 
         /**
@@ -272,8 +272,8 @@ class DefaultController extends Controller
         /**
          * Check on the fly configuration first
          */
-        if ($session->has(dks3module::SESSION_PREFIX_KEY) && null !== $session->get(dks3module::SESSION_PREFIX_KEY)) {
-            return $session->get(dks3module::SESSION_PREFIX_KEY);
+        if ($session->has(skyS3Module::SESSION_PREFIX_KEY) && null !== $session->get(skyS3Module::SESSION_PREFIX_KEY)) {
+            return $session->get(skyS3Module::SESSION_PREFIX_KEY);
         }
 
         /**

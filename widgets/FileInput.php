@@ -1,6 +1,6 @@
 <?php
 
-namespace dkemens\s3mediamanager\widgets;
+namespace skyline\yii\s3mediamanager\widgets;
 
 use Yii;
 use yii\helpers\Url;
@@ -9,7 +9,6 @@ use yii\widgets\InputWidget;
 
 class FileInput extends InputWidget
 {
-    
     /**
      * @var string the label to be displayed
      */
@@ -59,7 +58,7 @@ class FileInput extends InputWidget
      * @inheritdoc
      */
     public $options = ['class' => 'form-control', 'placeholder' => 'Select a file'];
-    
+
     /**
      * @var string widget template
      */

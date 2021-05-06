@@ -1,6 +1,6 @@
 <?php
 
-namespace dkemens\s3mediamanager\widgets;
+namespace skyline\yii\s3mediamanager\widgets;
 
 use Yii;
 use yii\widgets\InputWidget;

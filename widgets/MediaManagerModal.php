@@ -1,10 +1,10 @@
 <?php
 
-namespace dkemens\s3mediamanager\widgets;
+namespace skyline\yii\s3mediamanager\widgets;
 
 use yii\base\Widget;
-use dkemens\s3mediamanager\Module as dks3module;
-use dkemens\s3mediamanager\assets\MediaManagerAsset;
+use skyline\yii\s3mediamanager\Module as skyS3Module;
+use skyline\yii\s3mediamanager\assets\MediaManagerAsset;
 
 class MediaManagerModal extends Widget
 {
@@ -67,10 +67,10 @@ class MediaManagerModal extends Widget
     {
         MediaManagerAsset::register($this->view);
 
-        \Yii::$app->session->set(dks3module::SESSION_BUCKET_KEY, $this->s3bucket);
-        \Yii::$app->session->set(dks3module::SESSION_REGION_KEY, $this->s3region);
-        \Yii::$app->session->set(dks3module::SESSION_PREFIX_KEY, $this->s3prefix);
+        \Yii::$app->session->set(skyS3Module::SESSION_BUCKET_KEY, $this->s3bucket);
+        \Yii::$app->session->set(skyS3Module::SESSION_REGION_KEY, $this->s3region);
+        \Yii::$app->session->set(skyS3Module::SESSION_PREFIX_KEY, $this->s3prefix);
 
-        return $this->renderFile('@vendor/dkemens/yii2-aws-s3-manager/views/default/modal.php', []);
+        return $this->renderFile('@vendor/skyline/yii2-aws-s3-manager/views/default/modal.php', []);
     }
 }

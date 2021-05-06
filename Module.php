@@ -1,6 +1,6 @@
 <?php
 
-namespace dkemens\s3mediamanager;
+namespace skyline\yii\s3mediamanager;
 
 /**
  * portal module definition class
@@ -10,7 +10,7 @@ class Module extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'dkemens\s3mediamanager\controllers';
+    public $controllerNamespace = 'skyline\yii\s3mediamanager\controllers';
 
     /**
      * The module configuration
@@ -22,23 +22,23 @@ class Module extends \yii\base\Module
      *
      * @var        string
      */
-    const SESSION_BUCKET_KEY = 'dks3bucket';
+    public const SESSION_BUCKET_KEY = 'skys3bucket';
 
     /**
      * The sesion key for the s3 region
      *
      * @var        string
      */
-    const SESSION_REGION_KEY = 'dks3region';
+    public const SESSION_REGION_KEY = 'skys3region';
 
     /**
      * The sesion key for the s3 prefix
      *
      * @var        string
      */
-    const SESSION_PREFIX_KEY = 'dks3prefix';
+    public const SESSION_PREFIX_KEY = 'skys3prefix';
 
-    
+
 
     /**
      * @inheritdoc

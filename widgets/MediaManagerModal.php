@@ -1,10 +1,10 @@
 <?php
 
-namespace skyline\yii\s3mediamanager\widgets;
+namespace skyline\yii\s3manager\widgets;
 
 use yii\base\Widget;
-use skyline\yii\s3mediamanager\Module as skyS3Module;
-use skyline\yii\s3mediamanager\assets\MediaManagerAsset;
+use skyline\yii\s3manager\Module as skyS3Module;
+use skyline\yii\s3manager\assets\MediaManagerAsset;
 
 class MediaManagerModal extends Widget
 {
@@ -37,13 +37,13 @@ class MediaManagerModal extends Widget
         if ($this->s3bucket === null) {
             $this->s3bucket = isset(\Yii::$app->params['s3bucket'])
                 ? \Yii::$app->params['s3bucket']
-                : \Yii::$app->modules['s3mediamanager']['configuration']['bucket'];
+                : \Yii::$app->modules['s3manager']['configuration']['bucket'];
         }
 
         if ($this->s3region === null) {
             $this->s3region = isset(\Yii::$app->params['s3region'])
                 ? \Yii::$app->params['s3region']
-                : \Yii::$app->modules['s3mediamanager']['configuration']['region'];
+                : \Yii::$app->modules['s3manager']['configuration']['region'];
         }
 
         if ($this->s3prefix === null) {
@@ -51,8 +51,8 @@ class MediaManagerModal extends Widget
                 $this->s3prefix = \Yii::$app->params['s3prefix'];
             }
 
-            if (isset(\Yii::$app->modules['s3mediamanager']['configuration']['s3prefix'])) {
-                $this->s3prefix = \Yii::$app->modules['s3mediamanager']['configuration']['s3prefix'];
+            if (isset(\Yii::$app->modules['s3manager']['configuration']['s3prefix'])) {
+                $this->s3prefix = \Yii::$app->modules['s3manager']['configuration']['s3prefix'];
             }
 
             $this->s3prefix = null;
@@ -71,6 +71,6 @@ class MediaManagerModal extends Widget
         \Yii::$app->session->set(skyS3Module::SESSION_REGION_KEY, $this->s3region);
         \Yii::$app->session->set(skyS3Module::SESSION_PREFIX_KEY, $this->s3prefix);
 
-        return $this->renderFile('@vendor/skyline/yii2-aws-s3-manager/views/default/modal.php', []);
+        return $this->renderFile('@vendor/skyline/s3manager/views/default/modal.php', []);
     }
 }

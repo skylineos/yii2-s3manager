@@ -16,13 +16,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist dkemens/yii2-aws-s3-manager
+php composer.phar require --prefer-dist skyline/yii2-s3manager
 ```
 
 or add
 
 ```json
-"dkemens/yii2-aws-s3-manager": "~3.0.0"
+"skyline/yii2-s3manager": "~3.0.0"
 ```
 
 to the require section of your composer.json.
@@ -36,8 +36,8 @@ To use this extension, you should add the module to your web configuration. Conf
 return [
     //....
     'modules' => [
-        's3mediamanager' => [
-            'class' => 'dkemens\s3mediamanager\Module',
+        's3manager' => [
+            'class' => 'skyline\yii\s3manager\Module',
             // All settings can be configured on the fly regardless of usage type (fileinput, standalone manager, tinymce plugin)
             'configuration' => [ 
                 'bucket' => 'your-bucket-name', // can be overriden with \Yii::$app->params['s3bucket']
@@ -57,13 +57,13 @@ Use
 
 ### Standalone
 
-Simply navigate to /s3mediamanager
+Simply navigate to /s3manager
 
 ### With a file input (active form)
 
 In your form, add the following (ie. views/post/form.php)
 
-`use dkemens\s3mediamanager\widgets\{FileInput, MediaManagerModal};`
+`use skyline\yii\s3manager\widgets\{FileInput, MediaManagerModal};`
 
 Wherever you want your form field:
 
@@ -79,7 +79,7 @@ Then, at the bottom of the page (after your `<?php ActiveForm::end(); ?>`)
 
 On your form.php
 
-`use dkemens\s3mediamanager\widgets\{TinyMce, MediaManagerModal};`
+`use skyline\yii\s3manager\widgets\{TinyMce, MediaManagerModal};`
 
 Wherever you want your TinyMCE (client options are largely up to you): 
 

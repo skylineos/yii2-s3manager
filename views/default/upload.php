@@ -1,7 +1,7 @@
 <?php
 
 use yii\web\View;
-use skyline\yii\s3mediamanager\assets\MediaManagerAsset;
+use skyline\yii\s3manager\assets\MediaManagerAsset;
 
 MediaManagerAsset::register($this);
 

@@ -13,7 +13,7 @@ $(document).ready( function() {
 
     blocker();
 
-    $.get('/s3mediamanager/default/get-bucket-object', function(data) {
+    $.get('/s3manager/default/get-bucket-object', function(data) {
         var obj = JSON.parse(data);
         bucketObject = JSON.parse(obj.bucketObject);
 
@@ -72,11 +72,11 @@ function createJsTree(data)
         }
     }).bind('rename_node.jstree', function(e, data) {
         blocker();
-        $.post('/s3mediamanager/default/create-folder', { 
+        $.post('/s3manager/default/create-folder', { 
             name : data.text, 
             parent : data.node.parent,
         }, function( res ) {
-            $.get('/s3mediamanager/default/get-bucket-object', function(data) {
+            $.get('/s3manager/default/get-bucket-object', function(data) {
                 var obj = JSON.parse(data);
                 $('#folderTree').jstree(true).settings.core.data = obj.folderObject;
                 $('#folderTree').jstree(true).refresh();
@@ -97,7 +97,7 @@ function createJsTree(data)
             // @todo: only remove the node if ajax does not return an error rather than reloding the whole thing
             if (result.value === true) {
 
-                $.post('/s3mediamanager/default/delete-folder', { 
+                $.post('/s3manager/default/delete-folder', { 
                     key : data.node.id,
                 }, function(data) {
                     var result = JSON.parse(data);
@@ -111,7 +111,7 @@ function createJsTree(data)
                             icon: 'error',
                         });
         
-                        $.get('/s3mediamanager/default/get-bucket-object', function(data) {
+                        $.get('/s3manager/default/get-bucket-object', function(data) {
                             var obj = JSON.parse(data);
                             $('#folderTree').jstree(true).settings.core.data = obj.folderObject;
                             $('#folderTree').jstree(true).refresh();
@@ -126,7 +126,7 @@ function createJsTree(data)
                     }
                 });   
             } else {
-                $.get('/s3mediamanager/default/get-bucket-object', function(data) {
+                $.get('/s3manager/default/get-bucket-object', function(data) {
                     var obj = JSON.parse(data);
                     $('#folderTree').jstree(true).settings.core.data = obj.folderObject;
                     $('#folderTree').jstree(true).refresh();
@@ -162,13 +162,13 @@ var uploader = new Dropzone('#s3mm-file-upload-form', {
             var key = `${$('#s3mm-upload-path').val()}/${file.name}`;
 
             // Add the new item to the existing bucketObject
-            $.get('/s3mediamanager/default/get-object?justPath=false&key='+key, function(data) {
+            $.get('/s3manager/default/get-object?justPath=false&key='+key, function(data) {
                 if ( typeof(bucketObject[$('#s3mm-upload-path').val()]) == "undefined" )
                 {
                     bucketObject[$('#s3mm-upload-path').val()] = new Array;
                 }
 
-                $.get('/s3mediamanager/default/get-bucket-object', function(data) {
+                $.get('/s3manager/default/get-bucket-object', function(data) {
                     var obj = JSON.parse(data);
                     $('#folderTree').jstree(true).settings.core.data = obj.folderObject;
                     $('#folderTree').jstree(true).refresh();
@@ -188,7 +188,7 @@ $('#s3mm-object-list').on('click', '.fileRow', function() {
     $(this).addClass('table-info');
 
     var key = $(this).find('.s3mm-object').attr('id');
-    $.get('/s3mediamanager/default/get-object?key='+key, function(data) {
+    $.get('/s3manager/default/get-object?key='+key, function(data) {
         var data = JSON.parse(data);
         $('#insertFile').prop('disabled', false);
         $('#selectedFile').val(data.effectiveUrl);
@@ -253,7 +253,7 @@ $('#folderTree').on("changed.jstree", function (e, data) {
 $('#s3mm-object-list').on('click', '.s3mm-object', function(e, data) {
     var key = $(this).attr('id');
 
-    window.location.assign('/s3mediamanager/default/download?key='+key);
+    window.location.assign('/s3manager/default/download?key='+key);
 });
 
 /**
@@ -277,8 +277,8 @@ $('#s3mm-object-list').on('click', '.s3mm-delete-object', function(e, data) {
 
             var key = $(this).attr('id');
 
-            $.get('/s3mediamanager/default/delete?key='+key, function(data) {
-                $.get('/s3mediamanager/default/get-bucket-object', function(data) {
+            $.get('/s3manager/default/delete?key='+key, function(data) {
+                $.get('/s3manager/default/get-bucket-object', function(data) {
                     var obj = JSON.parse(data);
                     $('#folderTree').jstree(true).settings.core.data = obj.folderObject;
                     $('#folderTree').jstree(true).refresh();

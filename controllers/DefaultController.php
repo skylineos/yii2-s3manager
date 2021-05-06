@@ -1,13 +1,13 @@
 <?php
 
-namespace skyline\yii\s3mediamanager\controllers;
+namespace skyline\yii\s3manager\controllers;
 
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use skyline\yii\s3mediamanager\Module as skyS3Module;
-use skyline\yii\s3mediamanager\components\S3Adapter;
-use skyline\yii\s3mediamanager\components\S3Manager;
+use skyline\yii\s3manager\Module as skyS3Module;
+use skyline\yii\s3manager\components\S3Adapter;
+use skyline\yii\s3manager\components\S3Manager;
 
 /**
  * Default controller for the `myjsiCommon` module
@@ -215,8 +215,8 @@ class DefaultController extends Controller
         /**
          * Finally, check module configuration
          */
-        if (array_key_exists('bucket', \Yii::$app->modules['s3mediamanager']->configuration)) {
-            return \Yii::$app->modules['s3mediamanager']->configuration['bucket'];
+        if (array_key_exists('bucket', \Yii::$app->modules['s3manager']->configuration)) {
+            return \Yii::$app->modules['s3manager']->configuration['bucket'];
         }
 
         throw new \yii\web\BadRequestHttpException('There is no bucket configuration. Please refer to the Readme');
@@ -251,8 +251,8 @@ class DefaultController extends Controller
         /**
          * Finally, check module configuration
          */
-        if (array_key_exists('region', \Yii::$app->modules['s3mediamanager']['configuration'])) {
-            return \Yii::$app->modules['s3mediamanager']['configuration']['region'];
+        if (array_key_exists('region', \Yii::$app->modules['s3manager']['configuration'])) {
+            return \Yii::$app->modules['s3manager']['configuration']['region'];
         }
 
         throw new \yii\web\BadRequestHttpException('There is no region configuration. Please refer to the Readme');
@@ -286,7 +286,7 @@ class DefaultController extends Controller
         /**
          * Finally, check module configuration
          */
-        $manager = \Yii::$app->getModule('s3mediamanager');
+        $manager = \Yii::$app->getModule('s3manager');
         if (array_key_exists('s3prefix', $manager->configuration)) {
             return $manager->configuration['s3prefix'];
         }

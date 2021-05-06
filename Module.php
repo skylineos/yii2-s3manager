@@ -1,6 +1,6 @@
 <?php
 
-namespace skyline\yii\s3mediamanager;
+namespace skyline\yii\s3manager;
 
 /**
  * portal module definition class
@@ -10,7 +10,7 @@ class Module extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'skyline\yii\s3mediamanager\controllers';
+    public $controllerNamespace = 'skyline\yii\s3manager\controllers';
 
     /**
      * The module configuration
@@ -48,7 +48,7 @@ class Module extends \yii\base\Module
         parent::init();
 
         if ($this->configuration === null) {
-            \Yii::error('s3mediamanager configuation must be defined in web/config. Refer to README.');
+            \Yii::error('s3manager configuation must be defined in web/config. Refer to README.');
         }
 
         // custom initialization code goes here

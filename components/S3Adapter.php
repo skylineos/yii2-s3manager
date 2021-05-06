@@ -1,6 +1,6 @@
 <?php
 
-namespace skyline\yii\s3mediamanager\components;
+namespace skyline\yii\s3manager\components;
 
 use yii\web\BadRequestHttpException;
 use yii\helpers\ArrayHelper;

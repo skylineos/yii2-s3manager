@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use skyline\yii\s3mediamanager\assets\MediaManagerAsset;
+use skyline\yii\s3manager\assets\MediaManagerAsset;
 
 MediaManagerAsset::register($this);
 ?>
@@ -39,7 +39,7 @@ MediaManagerAsset::register($this);
                 <div class="clearfix"></div>
                 <hr>
 
-                <?= Html::beginForm(['/s3mediamanager/default/upload'], 'post', [
+                <?= Html::beginForm(['/s3manager/default/upload'], 'post', [
                     'enctype' => 'multipart/form-data',
                     'id' => 's3mm-file-upload-form'
                     ]) ?>

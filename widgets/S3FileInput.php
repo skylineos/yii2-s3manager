@@ -1,6 +1,6 @@
 <?php
 
-namespace skyline\yii\s3mediamanager\widgets;
+namespace skyline\yii\s3manager\widgets;
 
 use yii;
 use yii\helpers\Html;
@@ -188,6 +188,6 @@ class S3FileInput extends YiiInputWidget
     {
         MediaManagerAsset::register($this->view);
 
-        $modal = $this->renderFile('@vendor/skyline/yii2-aws-s3-manager/views/default/index.php', []);
+        $modal = $this->renderFile('@vendor/skyline/s3manager/views/default/index.php', []);
     }
 }

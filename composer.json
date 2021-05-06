@@ -1,5 +1,5 @@
 {
-    "name": "skyline/s3manager",
+    "name": "skyline/yii2-s3manager",
     "type": "yii2-extension",
     "description": "A yii2 extension for managing files in AWS S3 buckets",
     "keywords": ["yii2", "aws", "s3", "image manager", "file manager", "widget"],

@@ -71,6 +71,6 @@ class MediaManagerModal extends Widget
         \Yii::$app->session->set(skyS3Module::SESSION_REGION_KEY, $this->s3region);
         \Yii::$app->session->set(skyS3Module::SESSION_PREFIX_KEY, $this->s3prefix);
 
-        return $this->renderFile('@vendor/skylineos/s3manager/views/default/modal.php', []);
+        return $this->renderFile('@vendor/skylineos/yii2-s3manager/views/default/modal.php', []);
     }
 }

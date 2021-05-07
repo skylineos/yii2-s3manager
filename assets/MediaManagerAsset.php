@@ -6,7 +6,7 @@ use yii\web\AssetBundle;
 
 class MediaManagerAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/skylineos/s3manager/assets';
+    public $sourcePath = '@vendor/skylineos/yii2-s3manager/assets';
 
     public $css = [
         'css/basic.css',

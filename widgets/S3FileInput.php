@@ -188,6 +188,6 @@ class S3FileInput extends YiiInputWidget
     {
         MediaManagerAsset::register($this->view);
 
-        $modal = $this->renderFile('@vendor/skylineos/s3manager/views/default/index.php', []);
+        $modal = $this->renderFile('@vendor/skylineos/yii2-s3manager/views/default/index.php', []);
     }
 }

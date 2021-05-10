@@ -114,6 +114,7 @@ class DefaultController extends Controller
             ? ltrim(\Yii::$app->request->post('s3mm-upload-path'), '/')
             : '/';
 
+
         $s3 = $this->instantiateS3Adapter();
         $upload = $s3->upload($path, file_get_contents($uploaded->tempName), $uploaded->name);
 

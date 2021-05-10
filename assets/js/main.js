@@ -159,7 +159,11 @@ var uploader = new Dropzone('#s3mm-file-upload-form', {
             // Clear the dropzone and add the new file
             this.removeAllFiles();
 
-            var key = `${$('#s3mm-upload-path').val()}/${file.name}`;
+            if ($('#s3mm-upload-path').val() == '/') {
+                var key = file.name;
+            } else {
+                var key = `${$('#s3mm-upload-path').val()}/${file.name}`;
+            }
 
             // Add the new item to the existing bucketObject
             $.get('/s3manager/default/get-object?justPath=false&key='+key, function(data) {

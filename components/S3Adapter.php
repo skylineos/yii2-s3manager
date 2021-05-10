@@ -159,9 +159,9 @@ class S3Adapter extends \yii\base\BaseObject
      * Deletes an object from s3
      *
      * @param string $key
-     * @return array the result of the request
+     * @return object the result of the request
      */
-    public function delete(string $key): array
+    public function delete(string $key): object
     {
         return $this->s3->deleteObject([
             'Bucket' => $this->s3Bucket,
@@ -182,7 +182,11 @@ class S3Adapter extends \yii\base\BaseObject
         $this->connectAdapter();
 
         try {
-            $key = \preg_replace('/(\/+)/', '/', $this->s3Prefix . $path . '/' . $filename);
+            if ($path === '/') {
+                $key = $filename;
+            } else {
+                $key = \preg_replace('/(\/+)/', '/', $this->s3Prefix . $path . '/' . $filename);
+            }
 
             $options = [
                 'Bucket' => $this->s3Bucket,

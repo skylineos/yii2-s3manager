@@ -47,6 +47,7 @@ $(document).ready( function() {
         // @todo don't do this
         var target = $(opener).parent().parent().find('input').attr('id');
         $('#'+target).val($('#selectedFile').val());
+        $('#'+target).trigger('change');
         $('#MediaManager').modal('hide');
     });
 });

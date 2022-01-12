@@ -145,9 +145,9 @@ class S3Adapter extends \yii\base\BaseObject
      * Gets an object from s3 for download
      *
      * @param string $key
-     * @return Aws\Result the object result
+     * @return AWS\Result the object result
      */
-    public function download(string $key): Aws\Result
+    public function download(string $key): AWS\Result
     {
         return $this->s3->getObject([
             'Bucket' => $this->s3Bucket,

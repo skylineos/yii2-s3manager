@@ -24,7 +24,7 @@ class S3Adapter extends \yii\base\BaseObject
     private $s3;
     public string $s3Bucket;
     public string $s3Region;
-    public ?String $s3Prefix = null;
+    public ?string $s3Prefix = null;
 
     /**
      * @var League\Flysystem\Filesystem $filesystem

@@ -26,6 +26,7 @@
         "yiisoft/yii2": "~2.0.0",
         "yiisoft/yii2-imagine": "*",
         "aws/aws-sdk-php": "^3.64",
+        "tinymce/tinymce": "5.10.3",
         "2amigos/yii2-tinymce-widget": "~1.1",
         "thiagotalma/yii2-jstree": "~1.0.0",
         "league/flysystem": "^2.0",
